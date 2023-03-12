@@ -23,6 +23,23 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState(null)
   const [cardToDelete, setCardToDelete] = React.useState(null)
 
+  const isOpen = isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen ||isDeleteCardPopupOpen||selectedCard
+
+  React.useEffect(() => {
+    function closeByEsc(evt) {
+      if (evt.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', closeByEsc)
+    }
+    return() => {
+      document.removeEventListener('keydown', closeByEsc)
+    }
+  }, [isOpen])
+
   React.useEffect(() => {
     Promise.all([api.getInitialProfile(), api.getInitialCards()])
       .then(([profileInfo, cardsInfo]) => {
@@ -61,31 +78,27 @@ function App() {
     setIsLoading(true);
     api.editProfileInfo(profileInfo)
       .then(res => setCurrentUser(res))
-      .then(() => {
-        closeAllPopups();
-        setIsLoading(false);
-      })
+      .then(() => closeAllPopups())
       .catch(err => console.log(`Ошибка ${err}`))
+      .finally(() => setIsLoading(false))
   }
 
   function handleUpdateAvatar(avatarLink) {
     setIsLoading(true);
-    api.editAvatar(avatarLink).then(res => setCurrentUser(res)).then(() => {
-      closeAllPopups();
-      setIsLoading(false);
-    })
-    .catch(err => console.log(`Ошибка ${err}`))
+    api.editAvatar(avatarLink)
+      .then(res => setCurrentUser(res))
+      .then(() => closeAllPopups())
+      .catch(err => console.log(`Ошибка ${err}`))
+      .finally(() => setIsLoading(false))
   }
 
   function handleAddPlaceSubmit(cardInfo) {
     setIsLoading(true);
     api.postNewCard(cardInfo)
       .then(res => setCardsInfo([res, ...cards]))
-      .then(() => {
-        closeAllPopups();
-        setIsLoading(false);
-      })
+      .then(() => closeAllPopups())
       .catch(err => console.log(`Ошибка ${err}`))
+      .finally(() => setIsLoading(false))
   }
 
   function handleCardDeleteConfirm(someCard) {
@@ -95,10 +108,12 @@ function App() {
 
   function handleCardDelete(evt, cardToDelete) {
     evt.preventDefault();
-    api.deleteCard(cardToDelete._id).then(() => {
-      setCardsInfo(cards.filter(newCard => newCard._id !== cardToDelete._id));
+    api.deleteCard(cardToDelete._id)
+    .then(() => {
+      setCardsInfo(newCards => newCards.filter(newCard => newCard._id !== cardToDelete._id));
       closeAllPopups();
     })
+    .catch(err => console.log(`Ошибка ${err}`))
   }
 
   return (
