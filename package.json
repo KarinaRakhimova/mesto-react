@@ -2,7 +2,11 @@
   "name": "mesto-react",
   "version": "0.1.0",
   "private": true,
+<<<<<<< HEAD
   "homepage": "https://KarinaRakhimova.github.io/my-app",
+=======
+  "homepage": "https://myusername.github.io/my-app",
+>>>>>>> 1d3a88606831c60679d79df3b51757c4202eaaf5
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
