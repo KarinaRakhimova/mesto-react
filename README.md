@@ -8,6 +8,7 @@ SPA, реализованное на React. Одностраничное при�
   * Изучить основы библиотеки React.
 
 ## Screenshot
-
+![Screenshot](https://github.com/KarinaRakhimova/mesto-react/blob/main/Screenshot.png)
 
 ## Ссылка на проект
+https://karinarakhimova.github.io/mesto-react/
